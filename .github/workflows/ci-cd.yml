@@ -25,10 +25,10 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-    - name: Restaurar dependências
-  run: |
-    dotnet restore AquaSenseAPI/AquaSenseAPI.csproj
-    dotnet restore AquaSenseAPI.Tests/AquaSenseAPI.Tests.csproj
+      - name: Restaurar dependências
+        run: |
+          dotnet restore AquaSenseAPI/AquaSenseAPI.csproj
+          dotnet restore AquaSenseAPI.Tests/AquaSenseAPI.Tests.csproj
 
       - name: Compilar aplicação
         run: dotnet build AquaSenseAPI/AquaSenseAPI.csproj --configuration Release --no-restore
