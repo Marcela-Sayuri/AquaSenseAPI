@@ -1,0 +1,6 @@
+@AquaSenseAPI_HostAddress = http://localhost:5012
+
+GET {{AquaSenseAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Project Path="AquaSenseAPI.Tests/AquaSenseAPI.Tests.csproj" Id="e2ab5c9b-9950-4d29-b18d-590e6e2d18a0" />
+  <Project Path="AquaSenseAPI/AquaSenseAPI.csproj" />
+</Solution>
