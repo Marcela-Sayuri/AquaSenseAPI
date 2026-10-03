@@ -1,0 +1,35 @@
+name: AquaSenseAPI CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build e Testes
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar código
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restaurar dependências
+        run: dotnet restore AquaSenseAPI/AquaSenseAPI.csproj
+
+      - name: Compilar aplicação
+        run: dotnet build AquaSenseAPI/AquaSenseAPI.csproj --configuration Release --no-restore
+
+      - name: Executar testes
+        run: dotnet test AquaSenseAPI.Tests/AquaSenseAPI.Tests.csproj --configuration Release --no-restore --verbosity normal
