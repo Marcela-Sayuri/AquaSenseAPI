@@ -16,6 +16,15 @@ jobs:
     name: Build e Testes
     runs-on: ubuntu-latest
 
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          MSSQL_SA_PASSWORD: ${{ secrets.MSSQL_SA_PASSWORD }}
+        ports:
+          - 1433:1433
+
     steps:
       - name: Baixar código
         uses: actions/checkout@v4
@@ -30,8 +39,21 @@ jobs:
           dotnet restore AquaSenseAPI/AquaSenseAPI.csproj
           dotnet restore AquaSenseAPI.Tests/AquaSenseAPI.Tests.csproj
 
+      - name: Instalar dotnet-ef
+        run: dotnet tool install --global dotnet-ef --version 8.0.17
+
+      - name: Aguardar SQL Server
+        run: sleep 30
+
+      - name: Criar banco de testes
+        env:
+          ConnectionStrings__DefaultConnection: "Server=localhost,1433;Database=AquaSenseDB;User Id=sa;Password=${{ secrets.MSSQL_SA_PASSWORD }};TrustServerCertificate=True;MultipleActiveResultSets=True"
+        run: dotnet ef database update --project AquaSenseAPI/AquaSenseAPI.csproj
+
       - name: Compilar aplicação
         run: dotnet build AquaSenseAPI/AquaSenseAPI.csproj --configuration Release --no-restore
 
       - name: Executar testes
+        env:
+          ConnectionStrings__DefaultConnection: "Server=localhost,1433;Database=AquaSenseDB;User Id=sa;Password=${{ secrets.MSSQL_SA_PASSWORD }};TrustServerCertificate=True;MultipleActiveResultSets=True"
         run: dotnet test AquaSenseAPI.Tests/AquaSenseAPI.Tests.csproj --configuration Release --no-restore --verbosity normal
