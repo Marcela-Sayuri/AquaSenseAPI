@@ -57,3 +57,16 @@ jobs:
         env:
           ConnectionStrings__DefaultConnection: "Server=localhost,1433;Database=AquaSenseDB;User Id=sa;Password=${{ secrets.MSSQL_SA_PASSWORD }};TrustServerCertificate=True;MultipleActiveResultSets=True"
         run: dotnet test AquaSenseAPI.Tests/AquaSenseAPI.Tests.csproj --configuration Release --no-restore --verbosity normal
+
+      - name: Login no Azure Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: aquasenseacr2026.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Construir imagem Docker
+        run: docker build -t aquasenseacr2026.azurecr.io/aquasenseapi:latest ./AquaSenseAPI
+
+      - name: Enviar imagem para o ACR
+        run: docker push aquasenseacr2026.azurecr.io/aquasenseapi:latest
