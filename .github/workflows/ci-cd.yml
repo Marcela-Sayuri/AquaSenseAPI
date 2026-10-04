@@ -70,3 +70,16 @@ jobs:
 
       - name: Enviar imagem para o ACR
         run: docker push aquasenseacr2026.azurecr.io/aquasenseapi:latest
+
+  deploy-staging:
+    name: Deploy Staging
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy no Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: aquasense-staging-marcela
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING }}
+          images: aquasenseacr2026.azurecr.io/aquasenseapi:latest
