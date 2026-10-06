@@ -77,9 +77,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy no Azure App Service
+      - name: Deploy no Azure App Service - Staging
         uses: azure/webapps-deploy@v3
         with:
           app-name: aquasense-staging-marcela
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_STAGING }}
+          images: aquasenseacr2026.azurecr.io/aquasenseapi:latest
+
+  deploy-production:
+    name: Deploy Production
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy no Azure App Service - Production
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: aquasense-production-marcela
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_PRODUCTION }}
           images: aquasenseacr2026.azurecr.io/aquasenseapi:latest
